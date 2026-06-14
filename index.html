@@ -6476,12 +6476,12 @@ function initSpeech() {
 }
 function speakWord(word) {
   if (!word) return;
-  // ⚠️ iOS Safari: 不能加 setTimeout，必须同步调用才能发声
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(word);
   u.lang = 'en-US';
   u.rate = speechRate || 0.85;
   speechSynthesis.speak(u);
+  speechEnabled = true;
 }
 
 /* ================================================================
@@ -6536,7 +6536,7 @@ function flipCard() {
   if (wrap) { wrap.classList.toggle('flipped'); }
 }
 
-function playWordSound(word) { ensureSpeech(); speakWord(word); }
+function playWordSound(word) { speakWord(word); }
 
 // 录音跟读
 let mediaRecorder = null;
@@ -6554,8 +6554,13 @@ function toggleRecord(word) {
     btns.forEach(b => { b.textContent = '🎤 跟读'; b.style.background = 'var(--cyan-light)'; });
     return;
   }
-  // 开始录音
+    // 开始录音 - iOS Safari: 语音合成必须在用户手势中同步调用
+  speakWord(word);
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast('浏览器不支持录音');
+    return;
+  }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     showToast('浏览器不支持录音');
     return;
   }
@@ -6576,25 +6581,13 @@ function toggleRecord(word) {
     const btns = document.querySelectorAll('.record-btn');
     btns.forEach(b => { b.textContent = '⏹ 停止'; b.style.background = '#ffcdd2'; });
     // 播放原声先
-    ensureSpeech(); speakWord(word);
   }).catch(() => showToast('请允许使用麦克风'));
 }
 
 let speechEnabled = false;
 function ensureSpeech() {
   initSpeech();
-  if (!speechEnabled) {
-    // iOS Safari: SpeechSynthesis 需要用户手势触发一次才能激活
-    // 直接用一个简短的真实单词来初始化，避免额外噪音
-    try {
-      const u = new SpeechSynthesisUtterance('hi');
-      u.lang = 'en-US';
-      u.volume = 0.01;
-      u.rate = 3.0;
-      speechSynthesis.speak(u);
-    } catch (e) {}
-    speechEnabled = true;
-  }
+  speechEnabled = true;
 }
 
 // 简单音标猜测
@@ -6647,7 +6640,7 @@ function renderCurrentFlashcard(data) {
           <div class="phonetic">${escapeHtml(word.phonetic || '')}</div>
           ${word.partOfSpeech ? `<div class="pos">${escapeHtml(word.partOfSpeech)}</div>` : ''}
           <div style="margin-top:4px;display:flex;gap:8px;align-items:center;">
-            <button class="btn-speak" id="btnSpeak" onclick="event.stopPropagation();ensureSpeech();playWordSound('${escapeHtml(word.word).replace(/'/g, "\\'")}')">🔊</button>
+            <button class="btn-speak" id="btnSpeak" onclick="event.stopPropagation();speakWord('${escapeHtml(word.word).replace(/'/g, "\\'")}')">🔊</button>
             <button class="record-btn" style="padding:4px 12px;border:2px solid var(--cyan);border-radius:16px;background:var(--cyan-light);color:var(--cyan);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="event.stopPropagation();toggleRecord('${escapeHtml(word.word).replace(/'/g, "\\'")}')">🎤 跟读</button>
           </div>
           <div class="flip-hint">👆 点击看释义</div>
@@ -6657,7 +6650,7 @@ function renderCurrentFlashcard(data) {
           <div class="phonetic" style="font-size:13px;">${escapeHtml(word.phonetic || '')}</div>
           ${word.partOfSpeech ? `<div class="pos">${escapeHtml(word.partOfSpeech)}</div>` : ''}
           <div style="margin-bottom:4px;display:flex;gap:8px;align-items:center;">
-            <button class="btn-speak" id="btnSpeakBack" onclick="event.stopPropagation();ensureSpeech();playWordSound('${escapeHtml(word.word).replace(/'/g, "\\'")}')">🔊</button>
+            <button class="btn-speak" id="btnSpeakBack" onclick="event.stopPropagation();speakWord('${escapeHtml(word.word).replace(/'/g, "\\'")}')">🔊</button>
             <button class="record-btn" style="padding:4px 12px;border:2px solid var(--cyan);border-radius:16px;background:var(--cyan-light);color:var(--cyan);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="event.stopPropagation();toggleRecord('${escapeHtml(word.word).replace(/'/g, "\\'")}')">🎤 跟读</button>
           </div>
           <div class="meaning-ref" style="font-size:16px;">${escapeHtml(word.meaning) || '⚠️ 暂无释义'}</div>
@@ -6700,7 +6693,7 @@ function renderCurrentFlashcard(data) {
   // 发音按钮
   document.getElementById('btnSpeak').onclick = (e) => {
     e.stopPropagation();
-    ensureSpeech(); speakWord(word.word);
+    speakWord(word.word);
   };
 }
 
@@ -6737,7 +6730,7 @@ function chooseAnswer(btn) {
     document.getElementById('btnSkip').style.display = 'none';
     document.getElementById('btnCorrect').onclick = () => nextCard(data);
     const auto = document.getElementById('autoSpeak').checked;
-    if (auto) { ensureSpeech(); speakWord(word.word); }
+    if (auto) { speakWord(word.word); }
   } else {
     msg.textContent = '❌ 正确答案已标出';
     msg.className = 'result-msg wrong';
