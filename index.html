@@ -6458,7 +6458,8 @@ function normalChooseAnswer(btn){
   if(correct){
     studyState.answered=true;
     btn.classList.add('correct-pulse');
-    if(msgEl){msgEl.textContent='✅';msgEl.style.color='#81c784';}
+    if(msgEl){msgEl.innerHTML='✅ 正确！';msgEl.style.color='#4a6b3e';}
+    showToast('✅ 回答正确！');
     for(var i=0;i<allBtns.length;i++)allBtns[i].disabled=true;
     recordAnswer(true);
     var stats=getStats();stats.todayLearned=(stats.todayLearned||0)+1;stats.totalLearned=(stats.totalLearned||0)+1;
@@ -6477,7 +6478,9 @@ function normalChooseAnswer(btn){
     btn.classList.add('wrong-shake');
     var self=btn;
     setTimeout(function(){self.classList.remove('wrong-shake');},400);
-    if(msgEl){msgEl.textContent='❌ 再试试！';msgEl.style.color='#ef9a9a';}
+    if(msgEl){msgEl.innerHTML='❌ 再试试！';msgEl.style.color='#a5634e';}
+    showToast('❌ 不对，再想想');
+    // 显示正确选项
     for(var i=0;i<allBtns.length;i++){if(fuzzyMatch(allBtns[i].textContent,cm))allBtns[i].classList.add('correct-pulse');}
     var sb=document.getElementById('btnSkipWord');if(sb)sb.style.display='inline-flex';
   }
@@ -6523,12 +6526,12 @@ function errorChooseAnswer(btn){
   if(correct){
     btn.classList.add('correct-pulse');studyState.answered=true;
     document.querySelectorAll('.quiz-opt-big').forEach(function(b){b.disabled=true;});
-    var msgEl=document.getElementById('resultMsgReview');if(msgEl)msgEl.textContent='✅';
+    var msgEl=document.getElementById('resultMsgReview');if(msgEl)msgEl.innerHTML='✅';
     var ws=btn.getAttribute('data-word');recordErrorCorrect(ws);
     // 检查是否还需要再答一次
     var eb=getErrorBook();var stillIn=false;
     for(var ei=0;ei<eb.length;ei++){if((typeof eb[ei]==='object'?eb[ei].word:eb[ei])===ws){stillIn=true;break;}}
-    if(!stillIn){if(msgEl)msgEl.textContent='✅ 已从错题本移除！';}else{if(msgEl)msgEl.textContent='✅ 还需要再答对1次！';}
+    if(!stillIn){if(msgEl)msgEl.innerHTML='✅ 已从错题本移除！';showToast('✅ 已从错题本移除！');}else{if(msgEl)msgEl.innerHTML='✅ 还需要再答对1次！';showToast('✅ 再答对1次即可移出错题本');}
     recordAnswer(true);
     var stats=getStats();stats.todayLearned=(stats.todayLearned||0)+1;stats.totalLearned=(stats.totalLearned||0)+1;saveStats(stats);updateDashboard();
     var data=getData();var word=data.words.find(function(w){return w.word===ws;});
@@ -6536,7 +6539,8 @@ function errorChooseAnswer(btn){
     setTimeout(function(){studyState.currentIndex++;studyState.answered=false;renderStudyView();},700);
   }else{
     btn.classList.add('wrong-shake');
-    var msgEl=document.getElementById('resultMsgReview');if(msgEl)msgEl.textContent='❌';
+    var msgEl=document.getElementById('resultMsgReview');if(msgEl)msgEl.innerHTML='❌';
+    showToast('❌ 选错了');
     var self=btn;
     setTimeout(function(){self.classList.remove('wrong-shake');self.disabled=false;studyState.answered=false;document.querySelectorAll('.quiz-opt-big').forEach(function(b){if(!b.classList.contains('correct-pulse'))b.disabled=false;});},500);
   }
