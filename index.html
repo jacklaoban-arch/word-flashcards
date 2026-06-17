@@ -6471,7 +6471,7 @@ function renderStudyView(){
   let queue = [];
   if (mode === 'review') queue = data.words.filter(w => w.stage < 6 && (!w.nextReviewDate || w.nextReviewDate <= today));
   else if (mode === 'new') { const nw = data.words.filter(w => w.stage === 0); queue = nw.slice(0, data.dailyNewLimit || 10); }
-  else if (mode === 'spelling') { queue = data.words.filter(w => w.stage > 0 && w.stage < 6 && (!w.nextReviewDate || w.nextReviewDate <= today)); }
+  else if (mode === 'spelling') { queue = data.words.filter(w => w.stage > 0 && w.stage < 6); }
   else if (mode === 'error-review') { const book = getErrorBook(); queue = data.words.filter(function(w){return book.some(function(e){return(typeof e==='object'?e.word:e)===w.word;});}); }
   else if (mode === 'mixed') { const r = data.words.filter(w => w.stage < 6 && w.nextReviewDate && w.nextReviewDate <= today); const nw = data.words.filter(w => w.stage === 0); queue = [...r, ...nw.slice(0, data.dailyNewLimit || 10)]; }
   return queue;
