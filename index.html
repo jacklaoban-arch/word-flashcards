@@ -6337,17 +6337,19 @@ function speakWord(word) {
    5. 导航 & 视图渲染
    ================================================================ */
 function setupNav() {
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('view' + btn.dataset.view.charAt(0).toUpperCase() + btn.dataset.view.slice(1)).classList.add('active');
-      const view = btn.dataset.view;
-      if (view === 'study') renderStudyView();
-      else if (view === 'plan') renderPlanView();
-      else if (view === 'manage') renderManageView();
-    });
+  document.getElementById('topNav').addEventListener('click', function(e){
+    var btn=e.target.closest('.nav-btn');
+    if(!btn)return;
+    document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+    btn.classList.add('active');
+    var viewId='view'+btn.dataset.view.charAt(0).toUpperCase()+btn.dataset.view.slice(1);
+    var el=document.getElementById(viewId);
+    if(el)el.classList.add('active');
+    var view=btn.dataset.view;
+    if(view==='study')renderStudyView();
+    else if(view==='plan')renderPlanView();
+    else if(view==='manage')renderManageView();
   });
 }
 
@@ -7106,14 +7108,15 @@ function initApp(){
   setupApp();
 }
 function setupApp(){
+  try{
   setupNav();
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      studyState.mode = btn.dataset.mode;
-      renderStudyView();
-    });
+  document.getElementById('modeSelector').addEventListener('click', function(e){
+    var btn=e.target.closest('.mode-btn');
+    if(!btn)return;
+    document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    studyState.mode=btn.dataset.mode;
+    renderStudyView();
   });
   document.getElementById('wordSearch').addEventListener('input', renderManageView);
   document.getElementById('btnAddWord').addEventListener('click', openAddModal);
@@ -7155,10 +7158,11 @@ function setupApp(){
   // 初始渲染
   renderStudyView();
   // 语速滑块
-  const rateSlider = document.getElementById('speechRateSlider'), rateDisp = document.getElementById('rateDisplay');
-  if (rateSlider) { rateSlider.oninput = () => { speechRate = parseFloat(rateSlider.value); if (rateDisp) rateDisp.textContent = speechRate.toFixed(1); }; }
+  var rateSlider = document.getElementById('speechRateSlider'), rateDisp = document.getElementById('rateDisplay');
+  if (rateSlider) { rateSlider.oninput = function(){ speechRate = parseFloat(rateSlider.value); if (rateDisp) rateDisp.textContent = speechRate.toFixed(1); }; }
 
-  document.getElementById('btnContinueLearning').onclick=function(){document.getElementById('victoryOverlay').classList.remove('active');studyState.mode='review';renderStudyView();};
+  var cl=document.getElementById('btnContinueLearning');if(cl)cl.onclick=function(){document.getElementById('victoryOverlay').classList.remove('active');studyState.mode='review';renderStudyView();};
+  }catch(e){console.error('setupApp error:',e);showToast('初始化出错，请刷新页面');}
 }
 // 启动
 document.addEventListener('DOMContentLoaded', initApp);
