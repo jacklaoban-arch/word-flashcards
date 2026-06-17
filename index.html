@@ -245,6 +245,7 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 </div></div>
 
 <script>
+console.log('SCRIPT LOADED');
 /* ================================================================
    1. 数据结构
    ================================================================ */
@@ -6259,7 +6260,6 @@ function saveData(data) {
   var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
   localStorage.setItem(key, JSON.stringify(data));
   _wordsCache = data;
-}
 }
 
 function loadFromServer(){
