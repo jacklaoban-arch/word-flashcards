@@ -7095,6 +7095,7 @@ function showToast(msg) { const t = document.getElementById('toast'); t.textCont
    ================================================================ */
 // ===== 应用初始化入口 =====
 function initApp(){
+  try{
   if(currentUser){
     var badge=document.getElementById('userBadge');
     if(badge)badge.innerHTML='👤 '+currentUser.name+' <small style="font-size:10px;">[切换]</small>';
@@ -7106,6 +7107,7 @@ function initApp(){
   initStats();updateDashboard();
   getData();
   setupApp();
+  }catch(e){alert('initApp error: '+e.message);}
 }
 function setupApp(){
   try{
