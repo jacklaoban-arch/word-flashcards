@@ -148,6 +148,14 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 .word-row .w-actions{display:flex;gap:4px}
 .word-row .w-actions button{background:none;border:1px solid #d6cdb8;border-radius:6px;cursor:pointer;padding:2px 8px;font-size:11px;color:#7a6e5a}
 .word-row .w-actions button:hover{background:#ddd4c2}
+.word-table{width:100%;border-collapse:collapse;font-size:13px}
+.word-table th{padding:8px 10px;text-align:left;background:#d6cdb8;color:#5c4e3d;font-weight:600;border-bottom:2px solid #c4b99c}
+.word-table td{padding:8px 10px;border-bottom:1px solid #d6cdb8}
+.word-table tr:hover td{background:#ddd4c2}
+.btn-sm{border:1px solid #d6cdb8;border-radius:6px;cursor:pointer;padding:4px 8px;font-size:12px;background:#f5f0e8;color:#5c4e3d;margin:0 2px}
+.btn-sm:hover{background:#d6cdb8}
+.stage-badge{padding:2px 8px;border-radius:6px;font-size:11px;background:#d6cdb8;color:#5c4e3d}
+.word-table-wrap{overflow-x:auto}
 .plan-summary{background:#e8e0d0;border-radius:14px;padding:16px;border:1px solid #d6cdb8;margin-bottom:12px}
 .plan-summary h3,.plan-list h4{font-family:Noto Sans SC,sans-serif;color:#4a6fa5;margin-bottom:8px;font-size:16px}
 .plan-stat{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #d6cdb8;font-size:13px;color:#5c4e3d}
@@ -158,6 +166,25 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 .trend-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
 .trend-bar{width:100%;max-width:28px;border-radius:4px 4px 0 0;min-height:2px;transition:height .3s}
 .trend-label{font-size:9px;color:#a0937d;white-space:nowrap}
+/* ===== 登录界面 ===== */
+#loginOverlay{display:none;position:fixed;inset:0;z-index:999;background:#f5f0e8;justify-content:center;align-items:center;padding:20px}
+#loginOverlay.active{display:flex}
+.login-card{background:#e8e0d0;border:2px solid #d6cdb8;border-radius:24px;padding:32px 28px;width:100%;max-width:360px;text-align:center}
+.login-card h2{color:#4a6fa5;font-size:22px;margin-bottom:4px}
+.login-card p{color:#a0937d;font-size:13px;margin-bottom:20px}
+.login-select{width:100%;padding:12px 16px;border:2px solid #d6cdb8;border-radius:14px;font-size:15px;font-family:inherit;outline:none;background:#f5f0e8;color:#5c4e3d;margin-bottom:12px;-webkit-appearance:none;appearance:none}
+.login-select:focus{border-color:#8a9eb0}
+.login-input{width:100%;padding:12px 16px;border:2px solid #d6cdb8;border-radius:14px;font-size:15px;font-family:inherit;outline:none;background:#f5f0e8;color:#5c4e3d;margin-bottom:12px}
+.login-input:focus{border-color:#8a9eb0}
+.login-btn{width:100%;padding:12px;border:none;border-radius:14px;background:#4a6fa5;color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:Noto Sans SC,sans-serif}
+.login-btn:hover{background:#3a5a8a}
+.login-error{color:#a5634e;font-size:13px;margin-top:8px;min-height:20px}
+.student-list{max-height:200px;overflow-y:auto;margin-bottom:12px}
+.student-opt{padding:10px 14px;border:1px solid #d6cdb8;border-radius:10px;margin-bottom:4px;cursor:pointer;font-size:14px;background:#f5f0e8;text-align:left}
+.student-opt:hover{background:#d6cdb8}
+.student-opt.selected{background:#d6cdb8;border-color:#8a9eb0;font-weight:600}
+.user-badge{display:inline-flex;align-items:center;gap:6px;background:#d6cdb8;border-radius:20px;padding:4px 14px 4px 10px;font-size:12px;color:#5c4e3d;cursor:pointer;margin-left:auto}
+.user-badge:hover{background:#c4b99c}
 </style>
 </head>
 <body>
@@ -168,6 +195,7 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
   <button class="nav-btn active" data-view="study">📖 学习</button>
   <button class="nav-btn" data-view="plan">📅 计划</button>
   <button class="nav-btn" data-view="manage">📚 单词管理</button>
+  <span class="user-badge" id="userBadge" onclick="showLogin()">👤 未登录</span>
 </nav>
 
 <div class="view active" id="viewStudy">
@@ -204,6 +232,18 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalBody"><!-- JS填充 --></div></div>
 <div class="toast" id="toast"></div>
 
+<!-- ===== 登录界面 ===== -->
+<div class="modal-overlay" id="loginOverlay"><div class="login-card" id="loginCard">
+  <h2>🚀 太空单词探险</h2>
+  <p>请先选择班级和姓名</p>
+  <select class="login-select" id="loginClass" onchange="onClassChange()"><option value="">— 选择班级 —</option></select>
+  <div class="student-list" id="studentList"></div>
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><hr style="flex:1;border:none;border-top:1px solid #d6cdb8"><span style="color:#a0937d;font-size:12px;">或者</span><hr style="flex:1;border:none;border-top:1px solid #d6cdb8"></div>
+  <input type="text" class="login-input" id="newStudentName" placeholder="输入新姓名创建新学生...">
+  <button class="login-btn" onclick="doLogin()">🚀 开始学习</button>
+  <div class="login-error" id="loginError"></div>
+</div></div>
+
 <script>
 /* ================================================================
    1. 数据结构
@@ -215,6 +255,120 @@ var celebrationAnimationId = null;
 const STAGES = ['新词', '1天后', '2天后', '4天后', '7天后', '15天后', '已掌握'];
 const STAGE_INTERVALS = [0, 1, 2, 4, 7, 15, 999];
 
+// ===== 纯前端多用户系统（localStorage 存储） =====
+var currentUser = JSON.parse(localStorage.getItem('WordFlashcardUser') || 'null');
+const USERS_KEY = 'WordFlashcardAllUsers';
+
+function getAllUsers(){
+  try{return JSON.parse(localStorage.getItem(USERS_KEY))||{};}catch(e){return {};}
+}
+function saveAllUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u));}
+
+function getClassStudents(){
+  var users=getAllUsers();
+  var result={};
+  for(var key in users){
+    var u=users[key];
+    if(!result[u.class])result[u.class]=[];
+    result[u.class].push({id:key,name:u.name});
+  }
+  return result;
+}
+
+function showLogin(){
+  document.getElementById('loginOverlay').classList.add('active');
+  renderClassList();
+}
+function hideLogin(){
+  document.getElementById('loginOverlay').classList.remove('active');
+}
+
+function renderClassList(){
+  var data=getClassStudents();
+  var sel=document.getElementById('loginClass');
+  sel.innerHTML='<option value="">— 选择班级 —</option>';
+  var classNames=Object.keys(data);
+  if(classNames.length===0)classNames=['三年级一班','三年级二班','四年级一班'];
+  classNames.forEach(function(c){
+    var count=data[c]?data[c].length:0;
+    sel.innerHTML+='<option value="'+c+'">'+c+(count?' ('+count+'人)':'')+'</option>';
+  });
+  if(currentUser&&currentUser.class)sel.value=currentUser.class;
+  onClassChange();
+}
+
+function onClassChange(){
+  var classId=document.getElementById('loginClass').value;
+  var list=document.getElementById('studentList');
+  if(!classId){list.innerHTML='';return;}
+  var data=getClassStudents();
+  var students=data[classId]||[];
+  var html='';
+  students.forEach(function(s){
+    var selected=(currentUser&&currentUser.id===s.id)?' selected':'';
+    html+='<div class="student-opt'+selected+'" data-id="'+s.id+'" onclick="selectStudent(this,\''+s.id+'\')">'+s.name+'</div>';
+  });
+  list.innerHTML=html;
+  selectedStudentId=currentUser?currentUser.id:null;
+}
+
+var selectedStudentId=currentUser?currentUser.id:null;
+
+function selectStudent(el,id){
+  selectedStudentId=id;
+  document.querySelectorAll('.student-opt').forEach(function(e){e.classList.remove('selected');});
+  if(el)el.classList.add('selected');
+  document.getElementById('newStudentName').value='';
+}
+
+function doLogin(){
+  var classId=document.getElementById('loginClass').value;
+  var newName=document.getElementById('newStudentName').value.trim();
+  var errorEl=document.getElementById('loginError');
+  if(!classId){errorEl.textContent='请先选择班级';return;}
+
+  if(selectedStudentId){
+    var users=getAllUsers();
+    var user=users[selectedStudentId];
+    if(user){setCurrentUser({id:selectedStudentId,name:user.name,class:user.class});hideLogin();initApp();return;}
+  }
+
+  if(newName){
+    var users=getAllUsers();
+    var id='u_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+    users[id]={name:newName,class:classId};
+    saveAllUsers(users);
+    setCurrentUser({id:id,name:newName,class:classId});
+    // 为新用户复制默认词库
+    if(!localStorage.getItem(STORAGE_KEY+'_'+id)){
+      var words=initData().words;
+      localStorage.setItem(STORAGE_KEY+'_'+id,JSON.stringify(words));
+    }
+    hideLogin();
+    initApp();
+    return;
+  }
+  errorEl.textContent='请选择已有学生或输入新姓名';
+}
+
+function setCurrentUser(user){
+  currentUser=user;
+  localStorage.setItem('WordFlashcardUser',JSON.stringify(user));
+  var badge=document.getElementById('userBadge');
+  if(badge)badge.innerHTML='👤 '+user.name+' <small style="font-size:10px;">[切换]</small>';
+  // 切换用户时重新加载数据
+  _wordsCache=null;
+}
+
+function switchUser(){
+  currentUser=null;
+  selectedStudentId=null;
+  localStorage.removeItem('WordFlashcardUser');
+  _wordsCache=null;
+  showLogin();
+}
+
+// ===== 本地词典（内嵌 5000+ 词） =====
 const DEFAULT_WORDS = [
   { word: 'apple', meaning: '苹果', partOfSpeech: '名词', example: 'This is an apple.' },
   { word: 'run', meaning: '跑；奔跑', partOfSpeech: '动词', example: 'I run every morning.' },
@@ -6069,30 +6223,53 @@ const SUPPLEMENT_DICT = {
 /* ================================================================
    2. 数据管理
    ================================================================ */
+var _wordsCache = null;
+
 function getData() {
-  const raw = localStorage.getItem(STORAGE_KEY);
+  if (_wordsCache) return _wordsCache;
+  var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
+  var raw = localStorage.getItem(key);
   if (raw) {
     try {
-      const data = JSON.parse(raw);
-      if (Array.isArray(data)) {
-        const fixed = { words: data, dailyNewLimit: 10, autoSpeak: true };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(fixed));
-        return fixed;
-      }
+      var data = JSON.parse(raw);
+      if (Array.isArray(data)) { data = { words: data, dailyNewLimit: 10, autoSpeak: true }; localStorage.setItem(key, JSON.stringify(data)); }
+      _wordsCache = data;
       return data;
-    } catch (e) { return initData(); }
+    } catch (e) {}
   }
+  // 尝试加载内置词典中的词
   return initData();
 }
 function initData() {
-  const data = {
-    words: DEFAULT_WORDS.map(w => ({ ...w, stage: 0, nextReviewDate: null, correctCount: 0, wrongCount: 0 })),
-    dailyNewLimit: 10, autoSpeak: true,
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
+  var builtinWords = [];
+  var i=0;
+  // 从 BUILTIN_DICT 提取前50个词作为默认词库
+  for(var w in BUILTIN_DICT){
+    if(i++>50)break;
+    builtinWords.push({word:w, meaning:BUILTIN_DICT[w], partOfSpeech:'', example:'', stage:0, nextReviewDate:null, correctCount:0, wrongCount:0});
+  }
+  if(builtinWords.length<5)builtinWords=DEFAULT_WORDS.map(function(w){ return { word:w.word, meaning:w.meaning, partOfSpeech:w.partOfSpeech, example:w.example, stage:0, nextReviewDate:null, correctCount:0, wrongCount:0 }; });
+  var data = { words: builtinWords, dailyNewLimit: 10, autoSpeak: true };
+  localStorage.setItem(key, JSON.stringify(data));
+  _wordsCache = data;
   return data;
 }
-function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function saveData(data) {
+  var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
+  localStorage.setItem(key, JSON.stringify(data));
+  _wordsCache = data;
+}
+}
+
+function loadFromServer(){
+  // 纯前端版本，无需从服务器加载
+  return true;
+}
+
+function logAnswer(wordText, mode, correct){
+  // 纯前端版本，无需记录到服务器
+}
 
 /* ================================================================
    3. 模糊匹配
@@ -6192,10 +6369,13 @@ function createStarfield(){
   }
 }
 
-/* ===== 统计管理 ===== */
+/* ===== 统计管理（按用户隔离） ===== */
+function userKey(base){return base+'_'+(currentUser?currentUser.id:'default');}
+
 function initStats(){
+  var key=userKey(STATS_KEY);
   var d=new Date();var t=getTodayStr();
-  var s=JSON.parse(localStorage.getItem(STATS_KEY));
+  var s=JSON.parse(localStorage.getItem(key));
   if(!s||s.date!==t){
     var prevDate=s?s.date:null;
     var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
@@ -6204,10 +6384,11 @@ function initStats(){
     if(!s||!s.dailyHistory)s={date:t,todayLearned:0,totalLearned:(s?s.totalLearned||0:0),streak:streak,todayCorrect:0,todayWrong:0,dailyHistory:[]};
     else s={date:t,todayLearned:0,totalLearned:s.totalLearned||0,streak:streak,todayCorrect:0,todayWrong:0,dailyHistory:s.dailyHistory||[]};
   }
-  localStorage.setItem(STATS_KEY,JSON.stringify(s));return s;
+  localStorage.setItem(key,JSON.stringify(s));return s;
 }
 function getStats(){
-  var s=JSON.parse(localStorage.getItem(STATS_KEY));
+  var key=userKey(STATS_KEY);
+  var s=JSON.parse(localStorage.getItem(key));
   var d=new Date();var t=getTodayStr();
   if(!s||s.date!==t){
     var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
@@ -6223,10 +6404,12 @@ function recordAnswer(correct){
   else stats.todayWrong=(stats.todayWrong||0)+1;
   saveStats(stats);
 }
+function saveStats(s){localStorage.setItem(userKey(STATS_KEY),JSON.stringify(s));}
+
 function endDayStats(){
-  var s=JSON.parse(localStorage.getItem(STATS_KEY));
+  var key=userKey(STATS_KEY);
+  var s=JSON.parse(localStorage.getItem(key));
   if(!s||!s.date)return;
-  // 保存今日历史
   var todayStats={date:s.date,learned:s.todayLearned||0,correct:s.todayCorrect||0,wrong:s.todayWrong||0};
   var hist=s.dailyHistory||[];
   var found=false;
@@ -6234,16 +6417,13 @@ function endDayStats(){
   if(!found)hist.push(todayStats);
   if(hist.length>30)hist=hist.slice(hist.length-30);
   s.dailyHistory=hist;
-  // 更新连续天数
-  if(s.todayLearned>0){s.streak=(s.streak||0)+1;}
-  else{s.streak=0;}
-  localStorage.setItem(STATS_KEY,JSON.stringify(s));
+  if(s.todayLearned>0){s.streak=(s.streak||0)+1;}else{s.streak=0;}
+  localStorage.setItem(key,JSON.stringify(s));
 }
-// 页面关闭时记录当天统计
 window.addEventListener('beforeunload',function(){endDayStats();});
-function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
-function getErrorBook(){try{var b=JSON.parse(localStorage.getItem(ERROR_KEY));return Array.isArray(b)?b:[];}catch(e){return [];}}
-function saveErrorBook(b){localStorage.setItem(ERROR_KEY,JSON.stringify(b));}
+
+function getErrorBook(){try{var b=JSON.parse(localStorage.getItem(userKey(ERROR_KEY)));return Array.isArray(b)?b:[];}catch(e){return [];}}
+function saveErrorBook(b){localStorage.setItem(userKey(ERROR_KEY),JSON.stringify(b));}
 function addToErrorBook(w){var b=getErrorBook();var found=false;for(var i=0;i<b.length;i++){if(typeof b[i]==='object'&&b[i].word===w){found=true;break;}if(typeof b[i]==='string'&&b[i]===w){found=true;break;}}if(!found)b.push({word:w,consecutiveCorrect:0});saveErrorBook(b);updateDashboard();}
 function isInErrorBook(w){var b=getErrorBook();for(var i=0;i<b.length;i++){if(typeof b[i]==='object'&&b[i].word===w)return true;if(typeof b[i]==='string'&&b[i]===w)return true;}return false;}
 function recordErrorCorrect(w){var b=getErrorBook();for(var i=0;i<b.length;i++){if(typeof b[i]==='object'&&b[i].word===w){b[i].consecutiveCorrect=(b[i].consecutiveCorrect||0)+1;if(b[i].consecutiveCorrect>=2){b.splice(i,1);saveErrorBook(b);updateDashboard();if(b.length===0&&studyState&&studyState.mode==='error-review')startCelebration();}else{saveErrorBook(b);updateDashboard();}return;}if(typeof b[i]==='string'&&b[i]===w){b[i]={word:w,consecutiveCorrect:1};saveErrorBook(b);updateDashboard();return;}}}
@@ -6676,7 +6856,7 @@ function renderPlanView(){
   const filtered = q ? data.words.filter(w => w.word.includes(q) || (w.meaning && w.meaning.includes(q))) : data.words;
   const cont = document.getElementById('wordTableContainer');
   if (filtered.length === 0) { cont.innerHTML = '<div class="empty-state"><p>没有匹配的单词</p></div>'; return; }
-  cont.innerHTML = `<div class="word-table-wrap"><table class="word-table"><thead><tr><th>英文</th><th>中文</th><th>阶段</th><th>操作</th></tr></thead><tbody>${filtered.map(w => `<tr><td>${escapeHtml(w.word)}</td><td>${escapeHtml(w.meaning || '')}</td><td><span class="stage-badge ${w.stage === 6 ? 'stage-6' : ''}">${STAGES[w.stage] || w.stage}</span></td><td class="actions-col"><button class="btn-sm" style="background:var(--cyan-light);color:var(--cyan);" onclick="openEditModal('${escapeHtml(w.word).replace(/'/g, "&#39;")}')">✏️</button><button class="btn-sm" style="background:var(--pink-light);color:var(--pink);" onclick="deleteWord('${escapeHtml(w.word).replace(/'/g, "&#39;")}')">🗑️</button></td></tr>`).join('')}</tbody></table></div>`;
+  cont.innerHTML = '<div class="word-table-wrap"><table class="word-table"><thead><tr><th>英文</th><th>中文</th><th>阶段</th><th>操作</th></tr></thead><tbody>'+filtered.map(function(w){return '<tr><td>'+escapeHtml(w.word)+'</td><td>'+escapeHtml(w.meaning||'')+'</td><td><span class="stage-badge">'+STAGES[w.stage]+'</span></td><td><button class="btn-sm" onclick="openEditModal(\''+escapeHtml(w.word).replace(/'/g,"&#39;")+'\')">✏️</button><button class="btn-sm" onclick="deleteWord(\''+escapeHtml(w.word).replace(/'/g,"&#39;")+'\')">🗑️</button></td></tr>';}).join('')+'</tbody></table></div>';
 }
 
 function openEditModal(wordText) {
@@ -6734,10 +6914,10 @@ function openAddModal() {
 }
 
 function saveAdd() {
-  const word = document.getElementById('mWord').value.trim();
+  var word = document.getElementById('mWord').value.trim();
   if (!word) { showToast('请输入英文单词'); return; }
-  const data = getData();
-  if (data.words.some(w => w.word === word)) { showToast('单词已存在'); return; }
+  var data = getData();
+  if (data.words.some(function(w){ return w.word===word; })) { showToast('单词已存在'); return; }
   data.words.push({
     word: word.toLowerCase(),
     meaning: document.getElementById('mMeaning').value.trim(),
@@ -6829,7 +7009,68 @@ async function fetchMissingMeanings(words) {
 }
 
 /* ================================================================
-   10. 导出
+   10. 老师看板（纯前端，读取所有 localStorage 用户数据）
+   ================================================================ */
+function renderTeacherDashboard(){
+  var overlay=document.getElementById('modalOverlay');
+  var body=document.getElementById('modalBody');
+  var users=getAllUsers();
+  var html='<div style="max-height:80vh;overflow-y:auto;"><h3>📊 老师看板</h3><p style="font-size:13px;color:#a0937d;margin-bottom:12px;">以下数据来自本设备所有学生的 localStorage 记录</p>';
+  var classData={};
+  for(var key in users){
+    var u=users[key];
+    if(!classData[u.class])classData[u.class]=[];
+    var wordData=JSON.parse(localStorage.getItem(STORAGE_KEY+'_'+key)||'[]');
+    var stats=JSON.parse(localStorage.getItem(STATS_KEY+'_'+key)||'{}');
+    var err=JSON.parse(localStorage.getItem(ERROR_KEY+'_'+key)||'[]');
+    var totalWords=wordData.length;
+    var learned=wordData.filter(function(w){return w.stage>0;}).length;
+    var mastered=wordData.filter(function(w){return w.stage>=6;}).length;
+    classData[u.class].push({name:u.name,learned:learned,totalWords:totalWords,mastered:mastered,errors:err.length,stats:stats});
+  }
+
+  for(var cls in classData){
+    html+='<div style="background:#f5f0e8;border-radius:12px;padding:12px;margin-bottom:12px;"><h4 style="color:#4a6fa5;margin-bottom:8px;">📚 '+cls+'</h4>';
+    html+='<table style="width:100%;font-size:12px;border-collapse:collapse;">';
+    html+='<thead><tr style="background:#d6cdb8;"><th style="padding:6px 8px;text-align:left;">姓名</th><th style="padding:6px 8px;text-align:center;">已学</th><th style="padding:6px 8px;text-align:center;">已掌握</th><th style="padding:6px 8px;text-align:center;">错题</th><th style="padding:6px 8px;text-align:center;">今日</th><th style="padding:6px 8px;text-align:center;">连续</th></tr></thead><tbody>';
+    classData[cls].forEach(function(s){
+      html+='<tr style="border-bottom:1px solid #d6cdb8;"><td style="padding:6px 8px;font-weight:600;">'+s.name+'</td>'+
+        '<td style="padding:6px 8px;text-align:center;">'+s.learned+'/'+s.totalWords+'</td>'+
+        '<td style="padding:6px 8px;text-align:center;">'+s.mastered+'</td>'+
+        '<td style="padding:6px 8px;text-align:center;">'+s.errors+'</td>'+
+        '<td style="padding:6px 8px;text-align:center;">'+(s.stats.todayLearned||0)+'</td>'+
+        '<td style="padding:6px 8px;text-align:center;">'+(s.stats.streak||0)+'天</td></tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  html+='<div class="modal-actions"><button class="btn btn-outline" onclick="document.getElementById(\'modalOverlay\').classList.remove(\'show\')">关闭</button></div></div>';
+  body.innerHTML=html;
+  overlay.classList.add('show');
+}
+
+// 在计划视图加入"老师看板"按钮
+function addTeacherBtn(){
+  var planView=document.getElementById('viewPlan');
+  if(planView&&!document.getElementById('teacherBtn')){
+    var btn=document.createElement('button');
+    btn.id='teacherBtn';
+    btn.className='btn btn-outline';
+    btn.style.cssText='width:100%;margin-top:10px;padding:12px;font-size:15px;';
+    btn.innerHTML='📊 老师看板';
+    btn.onclick=renderTeacherDashboard;
+    planView.appendChild(btn);
+  }
+}
+
+// 劫持 renderPlanView 以加入按钮
+var origRenderPlan=renderPlanView;
+renderPlanView=function(){
+  origRenderPlan();
+  addTeacherBtn();
+};
+
+/* ================================================================
+   11. 导出
    ================================================================ */
 function exportData(includeRecords) {
   const data = getData();
@@ -6850,8 +7091,21 @@ function showToast(msg) { const t = document.getElementById('toast'); t.textCont
 /* ================================================================
    12. 初始化
    ================================================================ */
-document.addEventListener('DOMContentLoaded', () => {initStats();updateDashboard();
+// ===== 应用初始化入口 =====
+function initApp(){
+  if(currentUser){
+    var badge=document.getElementById('userBadge');
+    if(badge)badge.innerHTML='👤 '+currentUser.name+' <small style="font-size:10px;">[切换]</small>';
+    loadFromServer();
+  }else{
+    showLogin();
+    return;
+  }
+  initStats();updateDashboard();
   getData();
+  setupApp();
+}
+function setupApp(){
   setupNav();
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -6904,7 +7158,10 @@ document.addEventListener('DOMContentLoaded', () => {initStats();updateDashboard
   const rateSlider = document.getElementById('speechRateSlider'), rateDisp = document.getElementById('rateDisplay');
   if (rateSlider) { rateSlider.oninput = () => { speechRate = parseFloat(rateSlider.value); if (rateDisp) rateDisp.textContent = speechRate.toFixed(1); }; }
 
-  document.getElementById('btnContinueLearning').onclick=function(){document.getElementById('victoryOverlay').classList.remove('active');studyState.mode='review';renderStudyView();};});
+  document.getElementById('btnContinueLearning').onclick=function(){document.getElementById('victoryOverlay').classList.remove('active');studyState.mode='review';renderStudyView();};
+}
+// 启动
+document.addEventListener('DOMContentLoaded', initApp);
 </script>
 <canvas id="celebrationCanvas"></canvas>
 <div class="victory-overlay" id="victoryOverlay"><div class="victory-card"><div style="font-size:72px;">⭐</div><h2>全部通关！</h2><p id="victorySpeech">你太棒啦！</p><button class="btn-victory" id="btnContinueLearning">🚀 继续学习</button></div></div>
