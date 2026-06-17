@@ -6237,8 +6237,10 @@ function getData() {
       return data;
     } catch (e) {}
   }
-  // 尝试加载内置词典中的词
-  return initData();
+  // 首次使用（key 不存在）：填充默认词
+  if(localStorage.getItem(key) === null) return initData();
+  // 数据被清空过：返回空词库
+  return { words: [], dailyNewLimit: 10, autoSpeak: true };
 }
 function initData(keepWords) {
   var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
@@ -7149,7 +7151,8 @@ function setupApp(){
   document.getElementById('btnResetAll').addEventListener('click', () => {
     if (!confirm('确定要完全重置吗？所有数据（含单词）将被清除！')) return;
     if (!confirm('再次确认：这将删除所有单词和记录，不可恢复！')) return;
-    localStorage.removeItem(STORAGE_KEY); localStorage.setItem(STORAGE_KEY, JSON.stringify({words:[], dailyNewLimit:10, autoSpeak:true})); _wordsCache=null; renderManageView(); showToast('已完全重置！');
+    var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
+    localStorage.setItem(key, JSON.stringify({words:[], dailyNewLimit:10, autoSpeak:true})); _wordsCache=null; renderManageView(); showToast('已完全重置！');
   });
   document.getElementById('modalOverlay').onclick = e => { if (e.target === document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('show'); };
   // 通过事件委托处理发音按钮（解决单引号导致的 onclick 注入问题）
