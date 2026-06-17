@@ -33,7 +33,7 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 .btn{padding:8px 20px;border:2px solid #c4b99c;border-radius:12px;font-size:13px;font-weight:700;font-family:Noto Sans SC,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;letter-spacing:1px}
 .btn-know{background:#d6cdb8;color:#5c4e3d}
 .btn-skip{background:#e8d5c0;color:#a5634e}
-.quiz-opt-big{padding:10px 10px;border:2px solid #d6cdb8;border-radius:12px;background:#efe8da;font-size:14px;color:#5c4e3d;cursor:pointer;text-align:center;min-height:40px;display:flex;align-items:center;justify-content:center}
+.quiz-opt-big{padding:10px 10px;border:2px solid #d6cdb8;border-radius:12px;background:#efe8da;font-size:14px;color:#5c4e3d;cursor:pointer;text-align:center;min-height:40px;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s,border-color .15s}
 .quiz-opt-big:hover:not(:disabled){border-color:#b0a58e;background:#e8e0d0}
 .quiz-opt-big.correct-pulse{border-color:#6b8c5e!important;background:#d4e0c8!important;color:#4a6b3e!important;animation:pulseGreen .5s ease}
 .quiz-opt-big.wrong-shake{border-color:#c46a5a!important;background:#e8cdc4!important;color:#a5634e!important;animation:shake .4s ease}
@@ -73,7 +73,65 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 .btn-primary{background:#d6cdb8;border:2px solid #c4b99c;color:#5c4e3d;padding:8px 20px;border-radius:12px;font-size:13px;font-family:Noto Sans SC,sans-serif;cursor:pointer}
 .btn-primary:hover{background:#c4b99c}
 .quiz-options-review{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:10px auto 6px}
-@media(max-width:480px){.quiz-options-review{grid-template-columns:1fr}}
+.spell-card{background:#e8e0d0;border:2px solid #d6cdb8;border-radius:20px;padding:28px 24px;max-width:420px;margin:10px auto;text-align:center}
+.spell-meaning{font-size:24px;font-weight:700;color:#4a6fa5;margin-bottom:6px;line-height:1.4}
+.spell-pos{font-size:12px;color:#6b8c5e;background:#d6cdb8;border-radius:10px;padding:2px 10px;display:inline-block;margin-bottom:10px}
+.spell-example{font-size:13px;color:#7a6e5a;background:#f5f0e8;border-radius:10px;padding:8px 12px;margin:6px 0 14px;border:1px dashed #d6cdb8}
+.spell-input-row{margin:16px 0 10px}
+.spell-input{width:90%;max-width:280px;padding:12px 16px;border:2px solid #d6cdb8;border-radius:14px;font-size:20px;text-align:center;font-family:Noto Sans SC,sans-serif;outline:none;background:#f5f0e8;color:#5c4e3d;letter-spacing:2px}
+.spell-input:focus{border-color:#8a9eb0}
+.spell-wrong{border-color:#c46a5a!important;background:#f5e4de!important;animation:shake .4s ease}
+.spell-hint{font-size:14px;color:#a0937d;min-height:22px;margin:4px 0}
+.spell-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+/* ===== 响应式 ===== */
+@media(max-width:480px){
+  .view{padding:8px}
+  .dashboard{gap:6px}.dash-item{padding:4px 8px;min-width:60px}.dash-item .dash-value{font-size:16px}
+  .flashcard-wrap{max-width:100%;min-height:140px}.flashcard{min-height:140px;padding:12px 16px}
+  .flashcard .word{font-size:22px}.flashcard .meaning-ref{font-size:14px;padding:6px 12px}
+  .quiz-opt-big{padding:8px 8px;min-height:36px;font-size:13px}
+  .quiz-options-review{gap:6px}
+  .mode-btn{padding:5px 10px;font-size:10px}
+  .nav-btn{padding:10px 4px;font-size:12px}
+  .spell-meaning{font-size:20px}.spell-input{font-size:18px;padding:10px 12px;width:95%}.spell-card{padding:20px 16px}
+  .mascot{font-size:26px;bottom:10px;right:10px}
+  .btn{padding:6px 14px;font-size:12px}
+  .plan-stat{font-size:12px}
+  .word-row{font-size:12px;padding:4px 6px}
+}
+@media(min-width:481px) and (max-width:767px){
+  .view{padding:10px;max-width:100%}
+  .flashcard .word{font-size:24px}
+  .quiz-opt-big{padding:9px 10px;min-height:38px}
+}
+/* iPad 横屏 / 小桌面 */
+@media(min-width:768px){
+  .view{max-width:720px;padding:20px}
+  .flashcard-wrap{max-width:420px;min-height:180px}.flashcard{min-height:180px}
+  .flashcard .word{font-size:28px}
+  .quiz-opt-big{padding:12px 14px;min-height:44px;font-size:15px}
+  .spell-card{max-width:480px}.spell-meaning{font-size:26px}
+}
+/* 大屏优化 */
+@media(min-width:1024px){
+  .view{max-width:800px}
+  .flashcard-wrap{max-width:460px;min-height:190px}
+  .flashcard .word{font-size:30px}
+}
+/* 触摸反馈 */
+@media(hover:none){
+  .quiz-opt-big:active{border-color:#b0a58e;background:#d6cdb8;transform:scale(0.97)}
+  .mode-btn:active,.nav-btn:active{opacity:.7}
+  .btn-speak:active{background:#c4b99c;transform:scale(0.92)}
+  .btn:active{transform:scale(0.96)}
+  .word-row .w-actions button:active{background:#d6cdb8}
+}
+/* 横屏禁止缩放 */
+@media screen and (orientation:landscape) and (max-height:500px){
+  .dashboard{display:none}.mode-selector{display:none}
+  .flashcard-wrap{min-height:120px}.flashcard{min-height:120px;padding:8px 12px}
+  .flashcard .word{font-size:18px}.quiz-options-review{gap:4px}.quiz-opt-big{padding:4px 6px;min-height:28px;font-size:11px}
+}
 .settings-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px;padding:8px 16px;background:#e8e0d0;border-radius:12px}
 .settings-row label{font-size:12px;color:#7a6e5a;display:inline-flex;align-items:center;gap:6px}
 .settings-row input[type=number]{width:48px;padding:3px 6px;border:1px solid #d6cdb8;border-radius:6px;background:#f5f0e8;color:#5c4e3d;font-size:12px}
@@ -95,6 +153,11 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 .plan-stat{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #d6cdb8;font-size:13px;color:#5c4e3d}
 .plan-stat:last-child{border-bottom:none}
 .plan-list{background:#e8e0d0;border-radius:14px;padding:16px;border:1px solid #d6cdb8}
+.flip-example{font-size:12px;color:#7a6e5a;margin-top:6px;padding:6px 10px;background:#f5f0e8;border-radius:8px;border:1px dashed #d6cdb8;max-width:90%}
+.trend-bars{display:flex;gap:6px;justify-content:center;align-items:flex-end;height:60px;padding:8px 4px}
+.trend-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.trend-bar{width:100%;max-width:28px;border-radius:4px 4px 0 0;min-height:2px;transition:height .3s}
+.trend-label{font-size:9px;color:#a0937d;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -111,10 +174,11 @@ body{font-family:Noto Sans SC,sans-serif;background:#f5f0e8;color:#5c4e3d;min-he
 <div class="dashboard"><div class="dash-item"><div class="dash-label">今日新星</div><div class="dash-value" id="dashToday">0</div></div><div class="dash-item"><div class="dash-label">累计星云</div><div class="dash-value" id="dashTotal">0</div></div><div class="dash-item"><div class="dash-label">当前燃料</div><div class="dash-value" id="dashErrorCount">0</div></div></div>
 
   <div class="mode-selector" id="modeSelector">
-    <button class="mode-btn active" data-mode="review">🔄 复习模式</button>
+    <button class="mode-btn active" data-mode="review">🔄 复习</button>
     <button class="mode-btn" data-mode="new">🆕 学新词</button>
+    <button class="mode-btn" data-mode="spelling">✍️ 拼写</button>
     <button class="mode-btn" data-mode="error-review">📕 错题本</button>
-    <button class="mode-btn" data-mode="mixed">🎯 混合模式</button>
+    <button class="mode-btn" data-mode="mixed">🎯 混合</button>
   </div>
   <div class="flashcard-area" id="flashcardArea"><!-- JS填充 --></div>
   <div class="settings-row">
@@ -6130,21 +6194,60 @@ function createStarfield(){
 
 /* ===== 统计管理 ===== */
 function initStats(){
-  var d=new Date();var t=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');
+  var d=new Date();var t=getTodayStr();
   var s=JSON.parse(localStorage.getItem(STATS_KEY));
-  if(!s||s.date!==t){s={date:t,todayLearned:0,totalLearned:(s?s.totalLearned||0:0)};}
+  if(!s||s.date!==t){
+    var prevDate=s?s.date:null;
+    var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+    var yStr=yesterday.getFullYear()+'-'+(yesterday.getMonth()+1).toString().padStart(2,'0')+'-'+yesterday.getDate().toString().padStart(2,'0');
+    var streak=(s&&s.date===yStr)?(s.streak||0):0;
+    if(!s||!s.dailyHistory)s={date:t,todayLearned:0,totalLearned:(s?s.totalLearned||0:0),streak:streak,todayCorrect:0,todayWrong:0,dailyHistory:[]};
+    else s={date:t,todayLearned:0,totalLearned:s.totalLearned||0,streak:streak,todayCorrect:0,todayWrong:0,dailyHistory:s.dailyHistory||[]};
+  }
   localStorage.setItem(STATS_KEY,JSON.stringify(s));return s;
 }
 function getStats(){
   var s=JSON.parse(localStorage.getItem(STATS_KEY));
-  var d=new Date();var t=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');
-  if(!s||s.date!==t){s={date:t,todayLearned:0,totalLearned:(s?s.totalLearned||0:0)};}return s;
+  var d=new Date();var t=getTodayStr();
+  if(!s||s.date!==t){
+    var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+    var yStr=yesterday.getFullYear()+'-'+(yesterday.getMonth()+1).toString().padStart(2,'0')+'-'+yesterday.getDate().toString().padStart(2,'0');
+    var streak=(s&&s.date===yStr)?(s.streak||0):0;
+    if(!s||!s.dailyHistory)s={date:t,todayLearned:0,totalLearned:(s?s.totalLearned||0:0),streak:streak,todayCorrect:0,todayWrong:0,dailyHistory:[]};
+    else s={date:t,todayLearned:0,totalLearned:s.totalLearned||0,streak:streak,todayCorrect:0,todayWrong:0,dailyHistory:s.dailyHistory||[]};
+  }return s;
 }
+function recordAnswer(correct){
+  var stats=getStats();
+  if(correct)stats.todayCorrect=(stats.todayCorrect||0)+1;
+  else stats.todayWrong=(stats.todayWrong||0)+1;
+  saveStats(stats);
+}
+function endDayStats(){
+  var s=JSON.parse(localStorage.getItem(STATS_KEY));
+  if(!s||!s.date)return;
+  // 保存今日历史
+  var todayStats={date:s.date,learned:s.todayLearned||0,correct:s.todayCorrect||0,wrong:s.todayWrong||0};
+  var hist=s.dailyHistory||[];
+  var found=false;
+  for(var hi=0;hi<hist.length;hi++){if(hist[hi].date===s.date){hist[hi]=todayStats;found=true;break;}}
+  if(!found)hist.push(todayStats);
+  if(hist.length>30)hist=hist.slice(hist.length-30);
+  s.dailyHistory=hist;
+  // 更新连续天数
+  if(s.todayLearned>0){s.streak=(s.streak||0)+1;}
+  else{s.streak=0;}
+  localStorage.setItem(STATS_KEY,JSON.stringify(s));
+}
+// 页面关闭时记录当天统计
+window.addEventListener('beforeunload',function(){endDayStats();});
 function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
 function getErrorBook(){try{var b=JSON.parse(localStorage.getItem(ERROR_KEY));return Array.isArray(b)?b:[];}catch(e){return [];}}
 function saveErrorBook(b){localStorage.setItem(ERROR_KEY,JSON.stringify(b));}
-function addToErrorBook(w){var b=getErrorBook();if(b.indexOf(w)<0){b.push(w);saveErrorBook(b);}updateDashboard();}
-function removeFromErrorBook(w){var b=getErrorBook().filter(function(x){return x!==w;});saveErrorBook(b);updateDashboard();if(b.length===0&&studyState&&studyState.mode==='error-review')startCelebration();}
+function addToErrorBook(w){var b=getErrorBook();var found=false;for(var i=0;i<b.length;i++){if(typeof b[i]==='object'&&b[i].word===w){found=true;break;}if(typeof b[i]==='string'&&b[i]===w){found=true;break;}}if(!found)b.push({word:w,consecutiveCorrect:0});saveErrorBook(b);updateDashboard();}
+function isInErrorBook(w){var b=getErrorBook();for(var i=0;i<b.length;i++){if(typeof b[i]==='object'&&b[i].word===w)return true;if(typeof b[i]==='string'&&b[i]===w)return true;}return false;}
+function recordErrorCorrect(w){var b=getErrorBook();for(var i=0;i<b.length;i++){if(typeof b[i]==='object'&&b[i].word===w){b[i].consecutiveCorrect=(b[i].consecutiveCorrect||0)+1;if(b[i].consecutiveCorrect>=2){b.splice(i,1);saveErrorBook(b);updateDashboard();if(b.length===0&&studyState&&studyState.mode==='error-review')startCelebration();}else{saveErrorBook(b);updateDashboard();}return;}if(typeof b[i]==='string'&&b[i]===w){b[i]={word:w,consecutiveCorrect:1};saveErrorBook(b);updateDashboard();return;}}}
+function removeFromErrorBook(w){var b=getErrorBook().filter(function(x){return (typeof x==='object'?x.word:x)!==w;});saveErrorBook(b);updateDashboard();if(b.length===0&&studyState&&studyState.mode==='error-review')startCelebration();}
 function clearErrorBook(){saveErrorBook([]);updateDashboard();}
 
 /* ===== 仪表盘 ===== */
@@ -6174,6 +6277,7 @@ function normalChooseAnswer(btn){
     btn.classList.add('correct-pulse');
     if(msgEl){msgEl.textContent='✅';msgEl.style.color='#81c784';}
     for(var i=0;i<allBtns.length;i++)allBtns[i].disabled=true;
+    recordAnswer(true);
     var stats=getStats();stats.todayLearned=(stats.todayLearned||0)+1;stats.totalLearned=(stats.totalLearned||0)+1;
     saveStats(stats);updateDashboard();
     var w=data.words.find(function(w2){return w2.word===word.word;});
@@ -6226,7 +6330,7 @@ function renderErrorFlashcard(data){
   for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
   var sw=word.word.replace(/'/g,'&#39;');var sc=cm.replace(/'/g,'&#39;');
   var oh='';for(var i=0;i<opts.length;i++){var tx=escapeHtml(opts[i]);oh+='<button class="quiz-opt-big" data-word="'+sw+'" data-correct="'+sc+'" onclick="errorChooseAnswer(this)">'+tx+'</button>';}
-  area.innerHTML='<div class="flashcard-wrap" id="flashcardWrap" onclick="flipCard()"><div class="flashcard-inner"><div class="flashcard flashcard-front" style="border-color:#c46a5a;"><div class="word" style="color:#a5634e;">'+escapeHtml(word.word)+'</div><div class="phonetic">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos" style="background:#e8cdc4;color:#a5634e;">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<button class="btn-speak" data-word="'+sw+'">🔊</button><div class="flip-hint" style="color:#c46a5a;">👆 点击看释义</div></div><div class="flashcard flashcard-back" style="border-color:#c46a5a;"><div class="word" style="font-size:20px;color:#a5634e;">'+escapeHtml(word.word)+'</div><div class="phonetic" style="font-size:12px;">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos" style="background:#e8cdc4;color:#a5634e;">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<div class="meaning-ref" style="border-color:#c46a5a;">'+escapeHtml(word.meaning||'')+'</div><div class="flip-hint" style="color:#c46a5a;">👆 点击翻回</div></div></div></div><div class="quiz-options-review">'+oh+'</div><div id="resultMsgReview" class="result-msg"></div><div class="action-row"><!-- 无跳过按钮！强制复习 --></div>';
+  area.innerHTML='<div class="flashcard-wrap" id="flashcardWrap" onclick="flipCard()"><div class="flashcard-inner"><div class="flashcard flashcard-front" style="border-color:#c46a5a;"><div class="word" style="color:#a5634e;">'+escapeHtml(word.word)+'</div><div class="phonetic">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos" style="background:#e8cdc4;color:#a5634e;">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<button class="btn-speak" data-word="'+sw+'">🔊</button><div class="flip-hint" style="color:#c46a5a;">👆 点击看释义</div></div><div class="flashcard flashcard-back" style="border-color:#c46a5a;"><div class="word" style="font-size:20px;color:#a5634e;">'+escapeHtml(word.word)+'</div><div class="phonetic" style="font-size:12px;">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos" style="background:#e8cdc4;color:#a5634e;">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<div class="meaning-ref" style="border-color:#c46a5a;">'+escapeHtml(word.meaning||'')+'</div>'+(word.example?'<div class="flip-example" style="border-color:#c46a5a;">📝 '+escapeHtml(word.example)+'</div>':'')+'<div class="flip-hint" style="color:#c46a5a;">👆 点击翻回</div></div></div></div><div class="quiz-options-review">'+oh+'</div><div id="resultMsgReview" class="result-msg"></div><div class="action-row"><!-- 无跳过按钮！强制复习 --></div>';
 }
 
 function errorChooseAnswer(btn){
@@ -6237,7 +6341,12 @@ function errorChooseAnswer(btn){
     btn.classList.add('correct-pulse');studyState.answered=true;
     document.querySelectorAll('.quiz-opt-big').forEach(function(b){b.disabled=true;});
     var msgEl=document.getElementById('resultMsgReview');if(msgEl)msgEl.textContent='✅';
-    var ws=btn.getAttribute('data-word');removeFromErrorBook(ws);
+    var ws=btn.getAttribute('data-word');recordErrorCorrect(ws);
+    // 检查是否还需要再答一次
+    var eb=getErrorBook();var stillIn=false;
+    for(var ei=0;ei<eb.length;ei++){if((typeof eb[ei]==='object'?eb[ei].word:eb[ei])===ws){stillIn=true;break;}}
+    if(!stillIn){if(msgEl)msgEl.textContent='✅ 已从错题本移除！';}else{if(msgEl)msgEl.textContent='✅ 还需要再答对1次！';}
+    recordAnswer(true);
     var stats=getStats();stats.todayLearned=(stats.todayLearned||0)+1;stats.totalLearned=(stats.totalLearned||0)+1;saveStats(stats);updateDashboard();
     var data=getData();var word=data.words.find(function(w){return w.word===ws;});
     if(word){word.stage=Math.min(word.stage+1,6);word.correctCount=(word.correctCount||0)+1;var iv=STAGE_INTERVALS[word.stage]||1;if(iv>=999){word.nextReviewDate=null;}else{var d=new Date();d.setDate(d.getDate()+iv);word.nextReviewDate=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}saveData(data);}
@@ -6248,6 +6357,71 @@ function errorChooseAnswer(btn){
     var self=btn;
     setTimeout(function(){self.classList.remove('wrong-shake');self.disabled=false;studyState.answered=false;document.querySelectorAll('.quiz-opt-big').forEach(function(b){if(!b.classList.contains('correct-pulse'))b.disabled=false;});},500);
   }
+}
+
+/* ===== 拼写模式 ===== */
+var spellingState = { hintRevealed: false };
+
+function renderSpellingFlashcard(data){
+  var area=document.getElementById('flashcardArea');
+  if(studyState.currentIndex>=studyState.queue.length){renderStudyView();return;}
+  var word=studyState.queue[studyState.currentIndex];
+  if(!word.meaning)word.meaning=BUILTIN_DICT[word.word]||SUPPLEMENT_DICT[word.word]||'';
+  if(!word.phonetic)word.phonetic=guessPhonetic(word.word);if(!word.partOfSpeech)word.partOfSpeech=guessPOS(word.word);
+  var sw=word.word.replace(/'/g,'&#39;');
+  spellingState.hintRevealed = false;
+  var exHtml = word.example ? '<div class="spell-example">📝 '+escapeHtml(word.example)+'</div>' : '';
+  area.innerHTML='<div class="spell-card"><div class="spell-meaning">'+escapeHtml(word.meaning)+'</div>'+(word.partOfSpeech?'<div class="spell-pos">'+escapeHtml(word.partOfSpeech)+'</div>':'')+exHtml+'<div class="spell-input-row"><input type="text" class="spell-input" id="spellInput" placeholder="输入英文单词..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div><div class="spell-hint" id="spellHint"></div><div class="spell-btns"><button class="btn btn-know" id="spellCheckBtn">✅ 检查拼写</button><button class="btn btn-outline" id="spellHintBtn">💡 提示</button><button class="btn btn-skip" id="spellSkipBtn">⏭ 跳过</button></div><div class="result-msg" id="spellResult"></div></div>';
+  document.getElementById('spellCheckBtn').onclick=function(){checkSpelling(data,word);};
+  document.getElementById('spellHintBtn').onclick=function(){revealHint(word);};
+  document.getElementById('spellSkipBtn').onclick=function(){skipSpelling(data,word);};
+  document.getElementById('spellInput').onkeydown=function(e){if(e.key==='Enter')checkSpelling(data,word);};
+  setTimeout(function(){var inp=document.getElementById('spellInput');if(inp)inp.focus();},100);
+}
+
+function checkSpelling(data, word){
+  if(studyState.answered)return;
+  var inp=document.getElementById('spellInput');if(!inp)return;
+  var input=inp.value.trim().toLowerCase();
+  var correct=word.word.toLowerCase();
+  var result=document.getElementById('spellResult');
+  if(input===correct){
+    studyState.answered=true;
+    result.innerHTML='✅ 拼写正确！太棒了！';result.className='result-msg correct';
+    recordAnswer(true);
+    var stats=getStats();stats.todayLearned=(stats.todayLearned||0)+1;stats.totalLearned=(stats.totalLearned||0)+1;saveStats(stats);updateDashboard();
+    var w=data.words.find(function(w2){return w2.word===word.word;});
+    if(w){w.stage=Math.min(w.stage+1,6);w.correctCount=(w.correctCount||0)+1;var iv=STAGE_INTERVALS[w.stage]||1;if(iv>=999){w.nextReviewDate=null;}else{var d=new Date();d.setDate(d.getDate()+iv);w.nextReviewDate=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}saveData(data);}
+    var auto=document.getElementById('autoSpeak');if(auto&&auto.checked)speakWord(word.word);
+    setTimeout(function(){studyState.currentIndex++;studyState.answered=false;renderSpellingFlashcard(getData());},1200);
+  }else{
+    inp.classList.add('spell-wrong');
+    result.innerHTML='❌ 拼写错误，正确答案: <strong>'+escapeHtml(word.word)+'</strong>';result.className='result-msg wrong';
+    var w=data.words.find(function(w2){return w2.word===word.word;});
+    if(w){w.stage=Math.max(w.stage-1,0);w.wrongCount=(w.wrongCount||0)+1;var iv=STAGE_INTERVALS[w.stage]||1;if(iv>=999){w.nextReviewDate=null;}else{var d=new Date();d.setDate(d.getDate()+iv);w.nextReviewDate=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}saveData(data);}
+    addToErrorBook(word.word);
+    setTimeout(function(){inp.classList.remove('spell-wrong');studyState.answered=false;inp.value='';inp.focus();result.innerHTML='';result.className='result-msg';},2000);
+  }
+}
+
+function revealHint(word){
+  var hint=document.getElementById('spellHint');
+  if(!hint)return;
+  if(spellingState.hintRevealed){
+    hint.textContent='🔤 '+word.word.charAt(0)+' _ '.repeat(word.word.length-1)+' ('+word.word.length+' 个字母)';
+  }else{
+    var masked=word.word.split('').map(function(c,i){return i<Math.ceil(word.word.length/3)?c:'_';}).join(' ');
+    hint.textContent='💡 提示: '+masked;spellingState.hintRevealed=true;
+  }
+}
+
+function skipSpelling(data, word){
+  if(studyState.answered)return;
+  studyState.answered=true;
+  var result=document.getElementById('spellResult');
+  result.innerHTML='⏭ 跳过: <strong>'+escapeHtml(word.word)+'</strong> — '+escapeHtml(word.meaning);result.className='result-msg';
+  addToErrorBook(word.word);updateDashboard();
+  setTimeout(function(){studyState.currentIndex++;studyState.answered=false;renderSpellingFlashcard(getData());},1500);
 }
 
 /* ===== 胜利庆祝 ===== */
@@ -6290,13 +6464,15 @@ function renderStudyView(){
     return;
   }
   if(studyState.mode==='error-review'){renderErrorFlashcard(data);}
+  else if(studyState.mode==='spelling'){renderSpellingFlashcard(data);}
   else{renderCurrentFlashcard(data);}
 }function buildStudyQueue(data, mode) {
   const today = getTodayStr();
   let queue = [];
   if (mode === 'review') queue = data.words.filter(w => w.stage < 6 && (!w.nextReviewDate || w.nextReviewDate <= today));
   else if (mode === 'new') { const nw = data.words.filter(w => w.stage === 0); queue = nw.slice(0, data.dailyNewLimit || 10); }
-  else if (mode === 'error-review') { const book = getErrorBook(); queue = data.words.filter(w => book.indexOf(w.word) >= 0); }
+  else if (mode === 'spelling') { queue = data.words.filter(w => w.stage > 0 && w.stage < 6 && (!w.nextReviewDate || w.nextReviewDate <= today)); }
+  else if (mode === 'error-review') { const book = getErrorBook(); queue = data.words.filter(function(w){return book.some(function(e){return(typeof e==='object'?e.word:e)===w.word;});}); }
   else if (mode === 'mixed') { const r = data.words.filter(w => w.stage < 6 && w.nextReviewDate && w.nextReviewDate <= today); const nw = data.words.filter(w => w.stage === 0); queue = [...r, ...nw.slice(0, data.dailyNewLimit || 10)]; }
   return queue;
 }
@@ -6405,7 +6581,7 @@ function renderCurrentFlashcard(data){
   while(dst.length<3)dst.push('(?)');opts=opts.concat(dst);
   for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
   var oh='';for(var i=0;i<opts.length;i++){var tx=escapeHtml(opts[i]);oh+='<button class="quiz-opt-big" data-word="'+sw+'" data-correct="'+sc+'" onclick="normalChooseAnswer(this)">'+tx+'</button>';}
-  area.innerHTML='<div class="flashcard-wrap" id="flashcardWrap" onclick="flipCard()"><div class="flashcard-inner"><div class="flashcard flashcard-front"><div class="word">'+escapeHtml(word.word)+'</div><div class="phonetic">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<button class="btn-speak" data-word="'+sw+'">🔊</button><div class="flip-hint">👆 点击看释义</div></div><div class="flashcard flashcard-back"><div class="word" style="font-size:20px;">'+escapeHtml(word.word)+'</div><div class="phonetic" style="font-size:12px;">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<div class="meaning-ref">'+(escapeHtml(word.meaning)||'')+'</div><div class="flip-hint">👆 点击翻回</div></div></div></div><div class="quiz-options-review">'+oh+'</div><div class="result-msg" id="resultMsg"></div><div class="action-row" id="actionRow"><button class="btn btn-skip" id="btnSkipWord">⏭ 跳过（加入错题本）</button><button class="btn btn-know" id="btnCorrect" style="display:none">✅ 答对了</button><button class="btn btn-skip" id="btnWrong" style="display:none">❌ 标记错误</button></div>';
+  area.innerHTML='<div class="flashcard-wrap" id="flashcardWrap" onclick="flipCard()"><div class="flashcard-inner"><div class="flashcard flashcard-front"><div class="word">'+escapeHtml(word.word)+'</div><div class="phonetic">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<button class="btn-speak" data-word="'+sw+'">🔊</button><div class="flip-hint">👆 点击看释义</div></div><div class="flashcard flashcard-back"><div class="word" style="font-size:20px;">'+escapeHtml(word.word)+'</div><div class="phonetic" style="font-size:12px;">'+escapeHtml(word.phonetic||'')+'</div>'+(word.partOfSpeech?'<div class="pos">'+escapeHtml(word.partOfSpeech)+'</div>':'')+'<div class="meaning-ref">'+(escapeHtml(word.meaning)||'')+'</div>'+(word.example?'<div class="flip-example">📝 '+escapeHtml(word.example)+'</div>':'')+'<div class="flip-hint">👆 点击翻回</div></div></div></div><div class="quiz-options-review">'+oh+'</div><div class="result-msg" id="resultMsg"></div><div class="action-row" id="actionRow"><button class="btn btn-skip" id="btnSkipWord">⏭ 跳过（加入错题本）</button><button class="btn btn-know" id="btnCorrect" style="display:none">✅ 答对了</button><button class="btn btn-skip" id="btnWrong" style="display:none">❌ 标记错误</button></div>';
   document.getElementById('btnSkipWord').onclick=function(){skipCurrentWord(data);};
 }
 function chooseAnswer(btn) {
@@ -6488,7 +6664,12 @@ function renderPlanView(){
   var due=data.words.filter(function(w){return w.stage<6&&w.nextReviewDate&&w.nextReviewDate<=today;}).length;
   var newW=data.words.filter(function(w){return w.stage===0;}).length;
   var total=data.words.length;
-  document.getElementById('viewPlan').innerHTML='<div class="plan-summary"><h3>📊 概览</h3><div class="plan-stat"><span>总量</span><span>'+total+'</span></div><div class="plan-stat"><span>今日学习</span><span>'+stats.todayLearned+'</span></div><div class="plan-stat"><span>累计掌握</span><span>'+stats.totalLearned+'</span></div><div class="plan-stat"><span>待复习</span><span>'+due+'</span></div></div><div class="plan-list"><h4>📈 阶段分布</h4>'+STAGES.map(function(s,i){return '<div class="plan-stat"><span>'+s+'</span><span>'+data.words.filter(function(w){return w.stage===i;}).length+'</span></div>';}).join('')+'</div>';
+  var accuracy=stats.todayCorrect+stats.todayWrong>0?Math.round(stats.todayCorrect/(stats.todayCorrect+stats.todayWrong)*100):'-';
+  // 简单趋势条（最近7天）
+  var hist=stats.dailyHistory||[];
+  var recent7=hist.slice(-7);
+  var trendHtml=recent7.length>0?'<div class="trend-bars">'+recent7.map(function(d){var maxH=40;var h=d.learned>0?Math.min(d.learned/10*maxH,maxH):2;var barColor=d.learned>0?'#4a6fa5':'#d6cdb8';return '<div class="trend-col"><div class="trend-bar" style="height:'+h+'px;background:'+barColor+';"></div><div class="trend-label">'+d.date.slice(5)+'</div></div>';}).join('')+'</div>':'<div style="font-size:12px;color:#a0937d;text-align:center;padding:8px;">继续学习，明天将显示学习趋势</div>';
+  document.getElementById('viewPlan').innerHTML='<div class="plan-summary"><h3>📊 概览</h3><div class="plan-stat"><span>📚 词汇总量</span><span>'+total+'</span></div><div class="plan-stat"><span>🔥 连续学习</span><span>'+(stats.streak||0)+' 天</span></div><div class="plan-stat"><span>📖 今日学习</span><span>'+stats.todayLearned+' 词</span></div><div class="plan-stat"><span>🎯 今日正确率</span><span>'+(typeof accuracy==='number'?accuracy+'%':'-')+'</span></div><div class="plan-stat"><span>⭐ 累计掌握</span><span>'+stats.totalLearned+'</span></div><div class="plan-stat"><span>📕 错题本</span><span>'+eb.length+'</span></div><div class="plan-stat"><span>📅 待复习</span><span>'+due+'</span></div></div><div class="plan-list"><h4>📈 学习趋势（近7天）</h4>'+trendHtml+'</div><div class="plan-list" style="margin-top:10px;"><h4>🗂️ 阶段分布</h4>'+STAGES.map(function(s,i){return '<div class="plan-stat"><span>'+s+'</span><span>'+data.words.filter(function(w){return w.stage===i;}).length+'</span></div>';}).join('')+'</div>';
 }function renderManageView() {
   const data = getData();
   const q = (document.getElementById('wordSearch').value || '').trim().toLowerCase();
