@@ -340,10 +340,9 @@ function doLogin(){
     users[id]={name:newName,class:classId};
     saveAllUsers(users);
     setCurrentUser({id:id,name:newName,class:classId});
-    // 为新用户复制默认词库
+    // 为新用户初始化词库
     if(!localStorage.getItem(STORAGE_KEY+'_'+id)){
-      var words=initData().words;
-      localStorage.setItem(STORAGE_KEY+'_'+id,JSON.stringify(words));
+      initData(); // 首次使用填充默认词
     }
     hideLogin();
     initApp();
@@ -6241,17 +6240,26 @@ function getData() {
   // 尝试加载内置词典中的词
   return initData();
 }
-function initData() {
+function initData(keepWords) {
   var key=currentUser?userKey(STORAGE_KEY):STORAGE_KEY;
-  var builtinWords = [];
-  var i=0;
-  // 从 BUILTIN_DICT 提取前50个词作为默认词库
-  for(var w in BUILTIN_DICT){
-    if(i++>50)break;
-    builtinWords.push({word:w, meaning:BUILTIN_DICT[w], partOfSpeech:'', example:'', stage:0, nextReviewDate:null, correctCount:0, wrongCount:0});
+  var existing = localStorage.getItem(key);
+  var oldWords = existing ? (JSON.parse(existing).words || []) : [];
+  var words;
+  if(keepWords && oldWords.length > 0){
+    // 保留现有单词，仅重置进度
+    words = oldWords.map(function(w){ return Object.assign({}, w, {stage:0, nextReviewDate:null, correctCount:0, wrongCount:0}); });
+  }else{
+    // 首次初始化：从词典取前50词
+    var builtinWords = [];
+    var i=0;
+    for(var w in BUILTIN_DICT){
+      if(i++>50)break;
+      builtinWords.push({word:w, meaning:BUILTIN_DICT[w], partOfSpeech:'', example:'', stage:0, nextReviewDate:null, correctCount:0, wrongCount:0});
+    }
+    words = builtinWords.length >= 5 ? builtinWords :
+      DEFAULT_WORDS.map(function(w){ return { word:w.word, meaning:w.meaning, partOfSpeech:w.partOfSpeech, example:w.example, stage:0, nextReviewDate:null, correctCount:0, wrongCount:0 }; });
   }
-  if(builtinWords.length<5)builtinWords=DEFAULT_WORDS.map(function(w){ return { word:w.word, meaning:w.meaning, partOfSpeech:w.partOfSpeech, example:w.example, stage:0, nextReviewDate:null, correctCount:0, wrongCount:0 }; });
-  var data = { words: builtinWords, dailyNewLimit: 10, autoSpeak: true };
+  var data = { words: words, dailyNewLimit: 10, autoSpeak: true };
   localStorage.setItem(key, JSON.stringify(data));
   _wordsCache = data;
   return data;
@@ -7141,7 +7149,7 @@ function setupApp(){
   document.getElementById('btnResetAll').addEventListener('click', () => {
     if (!confirm('确定要完全重置吗？所有数据（含单词）将被清除！')) return;
     if (!confirm('再次确认：这将删除所有单词和记录，不可恢复！')) return;
-    localStorage.removeItem(STORAGE_KEY); initData(); renderManageView(); showToast('已完全重置！');
+    localStorage.removeItem(STORAGE_KEY); localStorage.setItem(STORAGE_KEY, JSON.stringify({words:[], dailyNewLimit:10, autoSpeak:true})); _wordsCache=null; renderManageView(); showToast('已完全重置！');
   });
   document.getElementById('modalOverlay').onclick = e => { if (e.target === document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('show'); };
   // 通过事件委托处理发音按钮（解决单引号导致的 onclick 注入问题）
